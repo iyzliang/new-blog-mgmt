@@ -1,6 +1,14 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import { setupRouter } from '@/router/index'
+import { setupStore } from '@/store/index'
+import { setupToast } from '@/plugins/toast'
+import '@/assets/style/public.scss'
 
-createApp(App).use(store).use(router).mount('#app')
+const app = createApp(App)
+
+setupRouter(app)
+setupStore(app)
+setupToast(app)
+
+app.mount('#app')
