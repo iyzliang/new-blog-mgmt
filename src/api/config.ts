@@ -1,23 +1,29 @@
 import { AxiosRequestConfig } from 'axios'
 
 export interface Config {
-  baseURL: string;
-  timeout: number;
   reqConfig: AxiosRequestConfig;
+  noToken: string[];
   noLoading: string[];
+  accessKey: string;
+  refreshKey: string;
+  expiresKey: string;
 }
 
 const config: Config = {
-  baseURL: process.env.VUE_APP_BASE_API,
-  timeout: 1 * 60 * 1000,
   reqConfig: {
+    baseURL: process.env.VUE_APP_BASE_API,
+    timeout: 1 * 60 * 1000,
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     },
     withCredentials: true
   },
-  noLoading: []
+  noToken: [],
+  noLoading: [],
+  accessKey: 'Y_MGMT_accessToken',
+  refreshKey: 'Y_MGMT_refreshToken',
+  expiresKey: 'Y_MGMT_expiresIn'
 }
 
 export default config

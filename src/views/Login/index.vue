@@ -25,6 +25,7 @@
 import { useTitle } from './hooks/TitleAnimation'
 import { useLogin } from './hooks/Login'
 export default {
+  name: 'login',
   setup () {
     const { titleArray } = useTitle('Hi,欢迎来到我的博客！')
     const { username, password, onSubmit } = useLogin()

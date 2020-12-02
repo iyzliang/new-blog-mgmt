@@ -8,13 +8,5 @@ export const frameOut: Array<RouteRecordRaw> = [
     meta: {
       title: '登录'
     }
-  },
-  {
-    path: '/loading',
-    name: 'loading',
-    component: () => import(/* webpackChunkName: "loading" */ '@/views/Loading/index.vue'),
-    meta: {
-      title: '加载'
-    }
   }
 ]

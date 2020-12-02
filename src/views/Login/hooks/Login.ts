@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { ElLoading } from 'element-plus'
 
 export function useLogin () {
   const username = ref<string>('')
@@ -7,6 +8,7 @@ export function useLogin () {
     console.log('--')
     console.log(username.value)
     console.log(password.value)
+    ElLoading.service()
   }
   return {
     username,
