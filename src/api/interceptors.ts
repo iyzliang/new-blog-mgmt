@@ -63,7 +63,7 @@ function refreshtoken () {
 }
 
 $axios.interceptors.request.use((config: AxiosRequestConfig) => {
-  const access = localStorage.getItem('accessToken')
+  const access = localStorage.getItem(globalConfig.accessKey)
   if (config.url && globalConfig.noLoading.indexOf(config.url) < 0) {
     loading = ElLoading.service({ text: '拼命加载中...' })
   }
@@ -111,7 +111,7 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
 
 $axios.interceptors.response.use((response: AxiosResponse) => {
   if (loading) loading.close()
-  return Promise.resolve(response)
+  return Promise.resolve(response.data)
 }, (error) => {
   if (loading) loading.close()
   if (error.response) {

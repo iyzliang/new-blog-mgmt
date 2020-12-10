@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import router from '@/router'
 import store from '@/store'
 export interface MenuItem {
@@ -22,28 +22,32 @@ export interface MenuItem {
 const useCreateMenu = () => {
   const menuListRef = ref<Array<MenuItem>>([
     {
-      menuId: 1,
+      menuId: 0,
       menuName: '数据统计',
-      menuIcon: 'yzliang-tongjishangwu'
+      menuIcon: 'yzliang-tongjishangwu',
+      menuRoute: 'analytic-home'
     },
     {
-      menuId: 2,
+      menuId: 1,
       menuName: '标签管理',
       menuIcon: 'yzliang-biaoqian',
       menuRoute: 'tag-list'
     },
     {
-      menuId: 3,
+      menuId: 2,
       menuName: '图片管理',
       menuIcon: 'yzliang-picture'
     },
     {
-      menuId: 4,
+      menuId: 3,
       menuName: '文章管理',
       menuIcon: 'yzliang-wenzhang'
     }
   ])
   const activeMenuId = computed(() => store.state.defaultMenuId)
+  onMounted(() => {
+    ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${activeMenuId.value}`)
+  })
   const changeMenuItem = (item: MenuItem, index: number) => {
     store.commit('SET_ACTIVE', item.menuId)
     if (item.menuRoute) {

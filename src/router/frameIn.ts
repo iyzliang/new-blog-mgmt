@@ -1,9 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue'
 import tags from './modules/tags'
+import analytic from './modules/analytic'
 
 const routes: Array<RouteRecordRaw> = [
-  ...tags
+  ...tags,
+  ...analytic
 ]
 
 export const frameIn: Array<RouteRecordRaw> = [

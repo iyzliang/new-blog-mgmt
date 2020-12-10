@@ -10,4 +10,9 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
+.analytic-home {
+  width: 100%;
+  height: 100%;
+  background-color: #0fa;
+}
 </style>

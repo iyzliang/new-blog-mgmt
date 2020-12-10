@@ -26,9 +26,9 @@ export function useLogin () {
         username: username.value,
         password: password.value
       }).then(res => {
-        localStorage.setItem(globalConfig.accessKey, res.accessToken)
-        localStorage.setItem(globalConfig.refreshKey, res.refreshToken)
-        localStorage.setItem(globalConfig.expiresKey, res.expiresIn)
+        localStorage.setItem(globalConfig.accessKey, res.data.accessToken)
+        localStorage.setItem(globalConfig.refreshKey, res.data.refreshToken)
+        localStorage.setItem(globalConfig.expiresKey, res.data.expiresIn)
         loadingInstance.close()
         router.push('/')
       })
