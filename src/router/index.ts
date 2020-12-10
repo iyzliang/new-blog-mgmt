@@ -8,6 +8,10 @@ import { frameOut } from './frameOut'
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/404'
+    },
     ...frameOut,
     ...frameIn
   ]

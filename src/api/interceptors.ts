@@ -12,8 +12,8 @@ import { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
  * @param {$toast} any 提示
  * @param {$axios} any axios实例
  */
-let isRefreshing: boolean = false
-let refreshSubscribers: any[] = []
+let isRefreshing = false
+let refreshSubscribers: ((string) => void)[] = []
 let loading: ILoadingInstance
 const $toast = useToast()
 const $axios: AxiosInstance = axios.create({
@@ -36,7 +36,7 @@ const isAccessTokenExpired = (): boolean => {
  * @msg 将过期后的请求放入事件数组中
  * @param {*} cb fun 未执行回调
  */
-function subscribeTokenRefresh (cb) {
+function subscribeTokenRefresh (cb: (string) => void) {
   refreshSubscribers.push(cb)
 }
 
@@ -53,9 +53,9 @@ function refreshtoken () {
   const RAxios: AxiosInstance = axios.create({
     ...globalConfig.reqConfig
   })
-  let refreshToken = localStorage.getItem(globalConfig.refreshKey)
+  const refreshToken = localStorage.getItem(globalConfig.refreshKey)
   return RAxios.request({
-    url: '/common/api/v2/refresh-token',
+    url: '/api/common/v1/refresh-token',
     data: {
       refreshToken
     }
@@ -69,13 +69,13 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
   }
   if (config.url && globalConfig.noToken.indexOf(config.url) < 0) {
     if (isAccessTokenExpired()) {
-      config.headers['Authorization'] = `Bearer ${access}`
+      config.headers.Authorization = `Bearer ${access}`
       return config
     } else {
       if (isRefreshing) {
-        let retry = new Promise((resolve) => {
+        const retry = new Promise((resolve) => {
           subscribeTokenRefresh((token) => {
-            config.headers['Authorization'] = `Bearer ${token}`
+            config.headers.Authorization = `Bearer ${token}`
             resolve(config)
           })
         }) as Promise<AxiosRequestConfig>
@@ -84,9 +84,7 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
         isRefreshing = true
         refreshtoken().then(res => {
           localStorage.setItem(globalConfig.accessKey, res.data.accessToken)
-          localStorage.setItem(globalConfig.refreshKey, res.data.refreshToken)
-          const time: number = (new Date()).getTime() / 1000
-          localStorage.setItem(globalConfig.expiresKey, res.data.expiresIn + time)
+          localStorage.setItem(globalConfig.expiresKey, res.data.expiresIn)
           isRefreshing = false
           onRefreshed(res.data.accessToken)
         }).catch(err => {
@@ -95,9 +93,9 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
           }
           window.location.pathname !== '/login' && router.replace({ name: 'login' })
         })
-        let retry = new Promise((resolve) => {
+        const retry = new Promise((resolve) => {
           subscribeTokenRefresh((token) => {
-            config.headers['Authorization'] = `Bearer ${token}`
+            config.headers.Authorization = `Bearer ${token}`
             resolve(config)
           })
         }) as Promise<AxiosRequestConfig>
@@ -107,14 +105,14 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
   } else {
     return config
   }
-}, (error: any) => {
+}, (error: Error) => {
   return Promise.resolve(error)
 })
 
 $axios.interceptors.response.use((response: AxiosResponse) => {
   if (loading) loading.close()
   return Promise.resolve(response)
-}, (error: any) => {
+}, (error) => {
   if (loading) loading.close()
   if (error.response) {
     let msg = ''

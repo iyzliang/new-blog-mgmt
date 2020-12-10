@@ -4,9 +4,17 @@ export const frameOut: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ '@/views/Login/index.vue'),
+    component: () => import(/* webpackChunkName: "Login" */ '@/views/Login/index.vue'),
     meta: {
       title: '登录'
+    }
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: () => import(/* webpackChunkName: "Common" */ '@/views/NotFound/index.vue'),
+    meta: {
+      title: '404'
     }
   }
 ]

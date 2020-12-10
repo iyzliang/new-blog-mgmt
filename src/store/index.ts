@@ -3,8 +3,12 @@ import { createStore } from 'vuex'
 
 const store = createStore({
   state: {
+    defaultMenuId: 1
   },
   mutations: {
+    SET_ACTIVE (state, payload) {
+      state.defaultMenuId = payload
+    }
   },
   actions: {
   },

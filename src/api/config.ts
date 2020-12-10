@@ -16,10 +16,12 @@ const config: Config = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
-    },
-    withCredentials: true
+    }
   },
-  noToken: [],
+  noToken: [
+    '/api/common/v1/login',
+    '/api/common/v1/refresh-token'
+  ],
   noLoading: [],
   accessKey: 'Y_MGMT_accessToken',
   refreshKey: 'Y_MGMT_refreshToken',

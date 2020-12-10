@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { useTitle } from './hooks/TitleAnimation'
 import { useLogin } from './hooks/Login'
-export default {
+export default defineComponent({
   name: 'login',
   setup () {
     const { titleArray } = useTitle('Hi,欢迎来到我的博客！')
@@ -36,7 +37,7 @@ export default {
       onSubmit
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
