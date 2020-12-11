@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent, ref, computed, onMounted, nextTick } from 'vue'
 import router from '@/router'
 import store from '@/store'
 export interface MenuItem {
@@ -41,12 +41,16 @@ const useCreateMenu = () => {
     {
       menuId: 3,
       menuName: '文章管理',
-      menuIcon: 'yzliang-wenzhang'
+      menuIcon: 'yzliang-wenzhang',
+      menuRoute: 'article-home'
     }
   ])
   const activeMenuId = computed(() => store.state.defaultMenuId)
   onMounted(() => {
-    ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${activeMenuId.value}`)
+    nextTick(() => {
+      console.log(activeMenuId.value)
+      ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${activeMenuId.value}`)
+    })
   })
   const changeMenuItem = (item: MenuItem) => {
     store.commit('SET_ACTIVE', item.menuId)
@@ -86,7 +90,6 @@ export default defineComponent({
     --navtab-item-height: 80px;
     --navtab-height: calc(var((--navtab-item-height) + 10px) * var(--navtab-count));
     --navtab-overlay-height: calc(10px * var(--navtab-count) + var(--navtab-item-height));
-    --active-index: 0;
     height: var(--navtab-height);
     position: relative;
     overflow: hidden;
