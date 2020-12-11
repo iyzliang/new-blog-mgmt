@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 
 const store = createStore({
   state: {
-    defaultMenuId: 1
+    defaultMenuId: 0
   },
   mutations: {
     SET_ACTIVE (state, payload) {

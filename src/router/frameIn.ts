@@ -12,6 +12,7 @@ export const frameIn: Array<RouteRecordRaw> = [
   {
     path: '/',
     component: Layout,
+    redirect: '/analytic',
     children: routes
   }
 ]

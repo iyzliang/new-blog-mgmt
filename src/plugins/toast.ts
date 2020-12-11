@@ -3,7 +3,8 @@ import Toast, { PluginOptions, POSITION } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
 const options: PluginOptions = {
-  position: POSITION.TOP_CENTER
+  position: POSITION.TOP_RIGHT,
+  timeout: 5000
 }
 
 export function setupToast (app: App<Element>) {

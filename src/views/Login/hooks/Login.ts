@@ -18,20 +18,23 @@ export function useLogin () {
   }
   const onSubmit = async () => {
     const checkText = checkQuery()
-    if (checkText) {
-      $toast.warning(checkText)
-    } else {
-      loadingInstance = ElLoading.service()
-      Api.common.login({
-        username: username.value,
-        password: password.value
-      }).then(res => {
-        localStorage.setItem(globalConfig.accessKey, res.data.accessToken)
-        localStorage.setItem(globalConfig.refreshKey, res.data.refreshToken)
-        localStorage.setItem(globalConfig.expiresKey, res.data.expiresIn)
+    try {
+      if (checkText) {
+        $toast.warning(checkText)
+      } else {
+        loadingInstance = ElLoading.service()
+        const accessData = await Api.common.login({
+          username: username.value,
+          password: password.value
+        })
+        localStorage.setItem(globalConfig.accessKey, accessData.data.accessToken)
+        localStorage.setItem(globalConfig.refreshKey, accessData.data.refreshToken)
+        localStorage.setItem(globalConfig.expiresKey, accessData.data.expiresIn)
         loadingInstance.close()
         router.push('/')
-      })
+      }
+    } finally {
+      loadingInstance && loadingInstance.close()
     }
   }
   return {

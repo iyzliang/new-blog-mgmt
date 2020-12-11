@@ -65,6 +65,11 @@ export default defineComponent({
     .main-contianer {
       width: calc(100% - 120px);
       height: 100%;
+      .view-container {
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+      }
     }
   }
 }

@@ -2,19 +2,15 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import globalConfig from './config'
 import router from '@/router'
 import { useToast } from 'vue-toastification'
-import { ElLoading } from 'element-plus'
-import { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type'
 
 /**
  * @param {isRefreshing} boolean 是否正在刷新
  * @param {refreshSubscribers} array 未执行任务队列
- * @param {loading} any loading实例
  * @param {$toast} any 提示
  * @param {$axios} any axios实例
  */
 let isRefreshing = false
 let refreshSubscribers: ((string) => void)[] = []
-let loading: ILoadingInstance
 const $toast = useToast()
 const $axios: AxiosInstance = axios.create({
   ...globalConfig.reqConfig
@@ -50,23 +46,28 @@ function onRefreshed (token) {
 }
 
 function refreshtoken () {
-  const RAxios: AxiosInstance = axios.create({
-    ...globalConfig.reqConfig
-  })
-  const refreshToken = localStorage.getItem(globalConfig.refreshKey)
-  return RAxios.request({
-    url: '/api/common/v1/refresh-token',
-    data: {
-      refreshToken
+  return new Promise((resolve, reject) => {
+    const refreshToken = localStorage.getItem(globalConfig.refreshKey)
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', `${globalConfig.reqConfig.baseURL}/api/common/v1/refresh-token`, true)
+    xhr.setRequestHeader(
+      'Content-Type', 'application/json'
+    )
+    xhr.onreadystatechange = function () {
+      if (this.readyState === 4) {
+        if (this.status === 200) {
+          resolve(JSON.parse(this.responseText))
+        } else {
+          reject(new Error('请求失败！'))
+        }
+      }
     }
+    xhr.send(JSON.stringify({ refreshToken }))
   })
 }
 
 $axios.interceptors.request.use((config: AxiosRequestConfig) => {
   const access = localStorage.getItem(globalConfig.accessKey)
-  if (config.url && globalConfig.noLoading.indexOf(config.url) < 0) {
-    loading = ElLoading.service({ text: '拼命加载中...' })
-  }
   if (config.url && globalConfig.noToken.indexOf(config.url) < 0) {
     if (isAccessTokenExpired()) {
       config.headers.Authorization = `Bearer ${access}`
@@ -82,7 +83,8 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
         return retry
       } else {
         isRefreshing = true
-        refreshtoken().then(res => {
+        /* eslint-disable */
+        refreshtoken().then((res: any) => {
           localStorage.setItem(globalConfig.accessKey, res.data.accessToken)
           localStorage.setItem(globalConfig.expiresKey, res.data.expiresIn)
           isRefreshing = false
@@ -110,10 +112,8 @@ $axios.interceptors.request.use((config: AxiosRequestConfig) => {
 })
 
 $axios.interceptors.response.use((response: AxiosResponse) => {
-  if (loading) loading.close()
   return Promise.resolve(response.data)
 }, (error) => {
-  if (loading) loading.close()
   if (error.response) {
     let msg = ''
     switch (error.response.status) {
@@ -144,7 +144,7 @@ $axios.interceptors.response.use((response: AxiosResponse) => {
       $toast.error('请求失败，请检查网络是否已连接')
     }
   }
-  return Promise.reject(error)
+  return error
 })
 
 export default $axios

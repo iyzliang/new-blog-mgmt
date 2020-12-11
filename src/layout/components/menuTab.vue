@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <div class="menu-tab">
-      <div :class="['menu-item', activeMenuId === item.menuId && 'active-menu']" v-for="(item, index) in menuListRef" :key="item.id" @click="changeMenuItem(item, index)">
+      <div :class="['menu-item', activeMenuId === item.menuId && 'active-menu']" v-for="item in menuListRef" :key="item.id" @click="changeMenuItem(item)">
         <i :class="item.menuIcon"></i>
       </div>
     </div>
@@ -48,12 +48,12 @@ const useCreateMenu = () => {
   onMounted(() => {
     ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${activeMenuId.value}`)
   })
-  const changeMenuItem = (item: MenuItem, index: number) => {
+  const changeMenuItem = (item: MenuItem) => {
     store.commit('SET_ACTIVE', item.menuId)
     if (item.menuRoute) {
       router.push({ name: item.menuRoute })
     }
-    ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${index}`)
+    ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${item.menuId}`)
   }
   return {
     menuListRef,
