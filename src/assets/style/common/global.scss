@@ -26,7 +26,7 @@
 }
 .view-container {
   --handle-height: 80px;
-  --pagination-height: 100px;
+  --pagination-height: 0px;
   --table-height: calc(100% - var(--handle-height) - var(--pagination-height));
   .container-handle {
     height: var(--handle-height);
@@ -39,6 +39,15 @@
       height: 100%;
       display: flex;
       align-items: center;
+      .el-input + .el-input {
+        margin-left: 30px;
+      }
+      .el-select {
+        margin-left: 30px;
+        .select-trigger {
+          width: 200px;
+        }
+      }
     }
     .handle-button {
       height: 100%;
@@ -51,5 +60,9 @@
     height: var(--table-height);
     width: 100%;
     overflow-y: scroll;
+  }
+  .container-pagination {
+    height: var(--pagination-height);
+    width: 100%;
   }
 }

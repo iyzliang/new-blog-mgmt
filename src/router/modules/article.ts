@@ -6,5 +6,13 @@ export default [
     meta: {
       menuId: 3
     }
+  },
+  {
+    path: 'article/add',
+    name: 'article-add',
+    component: () => import(/* webpackChunkName: "Article" */ '@/views/Article/add.vue'),
+    meta: {
+      menuId: 3
+    }
   }
 ]

@@ -1,6 +1,6 @@
 import handleRequest from '../request'
 
-const getTagList = data => {
+const getTagList = (data?) => {
   return handleRequest('/api/blog/v1/tag', data)()
 }
 

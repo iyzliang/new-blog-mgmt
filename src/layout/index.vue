@@ -4,11 +4,13 @@
     <div class="container-wrapper">
       <menu-tab />
       <div class="main-contianer">
-        <transition name="fade-transverse"  mode="out-in">
-          <keep-alive :include="keepAlive">
-            <router-view></router-view>
-          </keep-alive>
-        </transition>
+        <router-view v-slot="{ Component }">
+          <transition name="fade-transverse"  mode="out-in">
+            <keep-alive :include="keepAlive">
+              <component :is="Component" />
+            </keep-alive>
+          </transition>
+        </router-view>
       </div>
     </div>
   </div>
@@ -27,8 +29,7 @@ export default defineComponent({
   },
 
   setup () {
-    const keepAlive = ref<string[]>(['index'])
-
+    const keepAlive = ref<string[]>(['article-home', 'image-home', 'tag-list'])
     return {
       keepAlive
     }

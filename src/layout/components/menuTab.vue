@@ -36,7 +36,8 @@ const useCreateMenu = () => {
     {
       menuId: 2,
       menuName: '图片管理',
-      menuIcon: 'yzliang-picture'
+      menuIcon: 'yzliang-picture',
+      menuRoute: 'image-home'
     },
     {
       menuId: 3,
