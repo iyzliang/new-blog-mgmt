@@ -4,7 +4,8 @@ import 'vue-toastification/dist/index.css'
 
 const options: PluginOptions = {
   position: POSITION.TOP_RIGHT,
-  timeout: 3000
+  timeout: 3000,
+  pauseOnFocusLoss: false
 }
 
 export function setupToast (app: App<Element>) {

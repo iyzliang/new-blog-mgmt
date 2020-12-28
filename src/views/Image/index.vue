@@ -9,13 +9,14 @@
       </div>
     </div>
     <div class="container-tabel">
-      <el-space wrap alignment="flex-end">
+      <div class="img-space" wrap alignment="flex-end">
         <div class="img-block" v-for="item in imageListRef" :key="item.name">
-          <el-image style="width: 100%" :src="item.url" fit="contain" lazy></el-image>
-          <p class="img-name">{{ item.name }}</p>
+          <el-image style="width: 100%;height: 200px;display: block;" :src="item.url" fit="contain" lazy :preview-src-list="[item.url]"></el-image>
+          <p class="img-name copy-dom" @click="copyUrl(item.url)">{{ item.name }}</p>
+          <i class="el-icon-delete" @click="deleteImage(item.name)"></i>
         </div>
-      </el-space>
-      <el-button type="info" size="small" round class="more-btn" v-if="isShowMore" @click="getMoreData">加载更多</el-button>
+      </div>
+      <el-button size="small" round class="more-btn" v-if="isShowMore" @click="getMoreData">加载更多</el-button>
     </div>
     <input type="file" v-show="false" ref="uploadFileInput" accept="image/*" @change="choiceFile">
   </div>
@@ -28,19 +29,9 @@ export default defineComponent({
   name: 'image-home',
 
   setup () {
-    const { imageListRef, totalRef, pageLoadingRef, searchRef, uploadFileInput, isShowMore, getImageData, searchImageName, uploadImage, choiceFile, getMoreData } = useImage()
+    const useImageData = useImage()
     return {
-      imageListRef,
-      totalRef,
-      pageLoadingRef,
-      searchRef,
-      uploadFileInput,
-      isShowMore,
-      getImageData,
-      searchImageName,
-      uploadImage,
-      choiceFile,
-      getMoreData
+      ...useImageData
     }
   }
 })
@@ -50,31 +41,59 @@ export default defineComponent({
 .view-container {
   --pagination-height: 0px;
   .container-tabel {
-    .img-block {
-      width: 200px;
-      height: auto;
-      margin-bottom: 30px;
-      margin-left: 30px;
-      overflow: hidden;
-      border-radius: 5px;
-      .img-name {
-        width: 100%;
-        height: 30px;
-        line-height: 30px;
-        background-color: #fff;
-        font-size: 14px;
-        text-align: center;
+    .img-space {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-around;
+      .img-block {
+        width: 200px;
+        height: 230px;
+        margin-bottom: 30px;
+        margin-left: 30px;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer;
+        border-radius: 10px;
+        position: relative;
+        .img-name {
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          background-color: #fff;
+          font-size: 14px;
+          text-align: center;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+          &:hover {
+            color: #409eff;
+          }
+        }
+        .el-icon-delete {
+          display: none;
+          font-size: 20px;
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          cursor: pointer;
+          &:hover {
+            color: #409eff;
+          }
+        }
         &:hover {
-          color: #409eff;
+          .el-icon-delete {
+            display: block;
+          }
         }
       }
     }
     .more-btn {
+      line-height: 1.5;
+      font-size: 14px;
       width: 100%;
+      text-align: center;
+      margin-top: 14px;
     }
   }
 }

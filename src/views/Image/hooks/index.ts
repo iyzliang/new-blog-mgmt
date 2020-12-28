@@ -1,6 +1,9 @@
 
 import Api from '@/api'
 import { ref, onMounted, computed } from 'vue'
+import { useInputFile } from '@/hooks/imputFile'
+import { useToast } from 'vue-toastification'
+import Clipboard from 'clipboard'
 
 interface ImageItem {
   name: string;
@@ -10,78 +13,88 @@ interface ImageItem {
 
 export function useImage () {
   const imageListRef = ref<ImageItem[]>([])
-  const totalRef = ref<number>(0)
-  const pageRef = ref<number>(1)
-  const sizeRef = ref<number>(10)
-  const pageLoadingRef = ref<boolean>(false)
   const searchRef = ref<string>('')
-  const uploadFileInput = ref<HTMLElement>()
+  const pageRef = ref<number>(1)
+  const totalRef = ref<number>(0)
+  const size = 10
+  const $toast = useToast()
 
+  /**
+   * 获取图片列表
+   */
   const getImageData = async () => {
     const query = {
       page: pageRef.value,
-      size: sizeRef.value,
+      size,
       name: searchRef.value
     }
-    pageLoadingRef.value = true
-    try {
-      const imageData = await Api.image.getImageList(query)
-      totalRef.value = imageData.data.total
-      imageListRef.value = imageListRef.value.concat(imageData.data.list)
-    } finally {
-      pageLoadingRef.value = false
-    }
+    const imageData = await Api.image.getImageList(query)
+    totalRef.value = imageData.data.total
+    imageListRef.value = imageListRef.value.concat(imageData.data.list)
   }
 
+  /**
+   * 搜索图片名称
+   */
   const searchImageName = async () => {
     pageRef.value = 1
     imageListRef.value = []
     await getImageData()
   }
 
-  const uploadImage = () => {
-    if (uploadFileInput.value) {
-      (uploadFileInput.value as HTMLInputElement).value = ''
-      uploadFileInput.value.click()
-    }
+  /**
+   * 上传图片
+   * @param formdata 文件数据
+   */
+  const postItem = async (formdata) => {
+    await Api.image.postImageItem(formdata)
+    await searchImageName()
   }
 
-  const choiceFile = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    pageLoadingRef.value = true
-    try {
-      const formdata = new FormData()
-      formdata.append('file', file)
-      await Api.image.postImageItem(formdata)
-      await searchImageName()
-    } finally {
-      pageLoadingRef.value = false
-    }
-  }
-
+  const isShowMore = computed(() => totalRef.value > pageRef.value * size)
   const getMoreData = async () => {
-    pageRef.value = pageRef.value + 1
-    await getImageData()
+    if (isShowMore.value) {
+      pageRef.value = pageRef.value + 1
+      await getImageData()
+    }
   }
 
-  const isShowMore = computed(() => totalRef.value > pageRef.value * sizeRef.value)
+  const copyUrl = (url) => {
+    console.log(url)
+    const clipboard = new Clipboard('.copy-dom', {
+      text: () => {
+        return url
+      }
+    })
+    clipboard.on('success', () => {
+      $toast.success('复制成功')
+      clipboard.destroy()
+    })
+    clipboard.on('error', () => {
+      $toast.error('该浏览器不支持自动复制')
+      clipboard.destroy()
+    })
+  }
+
+  const deleteImage = async (name) => {
+    await Api.image.deleteImageItem({ name })
+    imageListRef.value = imageListRef.value.filter(item => item.name !== name)
+  }
 
   onMounted(() => {
     getImageData()
   })
 
+  const inputFile = useInputFile(postItem)
   return {
     imageListRef,
-    totalRef,
-    pageLoadingRef,
     searchRef,
-    uploadFileInput,
     isShowMore,
     getImageData,
     searchImageName,
-    uploadImage,
-    choiceFile,
-    getMoreData
+    getMoreData,
+    copyUrl,
+    deleteImage,
+    ...inputFile
   }
 }

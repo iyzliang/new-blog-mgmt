@@ -1,6 +1,6 @@
 import Api from '@/api'
-import { ref, reactive, onMounted } from 'vue'
-import router from '../../../router'
+import { ref, reactive, onMounted, computed } from 'vue'
+import router from '@/router'
 
 interface SearchData {
   title: string;
@@ -31,7 +31,6 @@ interface TagOptions {
 export function useArticleHome () {
   const articleRef = ref<ArticleRef[]>([])
   const totalRef = ref<number>(-1)
-  const noMore = ref<boolean>(false)
   const tagOptionsRef = ref<TagOptions[]>([
     {
       id: 0,
@@ -45,7 +44,7 @@ export function useArticleHome () {
   })
   const pageData = reactive<PageData>({
     page: 1,
-    size: 10
+    size: 5
   })
 
   const createEmptyArticle = (num: number) => {
@@ -75,18 +74,22 @@ export function useArticleHome () {
       ...searchData,
       ...pageData
     })
-    articleRef.value = articleRef.value.splice(articleRef.value.length - 3, 3)
-    articleRef.value = articleData.data.list
+    articleRef.value = articleRef.value.filter(item => item.title)
+    articleRef.value = articleRef.value.concat(articleData.data.list)
     totalRef.value = articleData.data.total
   }
 
-  const infiniteScrollFn = () => {
-    const curCount = pageData.page * pageData.size
-    if (totalRef.value > curCount) {
+  const searchArticle = async () => {
+    pageData.page = 1
+    articleRef.value = []
+    await getArticleData()
+  }
+
+  const isMoreData = computed(() => totalRef.value > pageData.page * pageData.size)
+  const infiniteScrollFn = async () => {
+    if (isMoreData.value) {
       pageData.page = pageData.page + 1
-      getArticleData()
-    } else {
-      noMore.value = true
+      await getArticleData()
     }
   }
 
@@ -103,8 +106,9 @@ export function useArticleHome () {
     totalRef,
     searchData,
     tagOptionsRef,
-    noMore,
+    isMoreData,
     getArticleData,
+    searchArticle,
     infiniteScrollFn,
     addArticle
   }

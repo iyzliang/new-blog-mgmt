@@ -1,7 +1,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import Api from '@/api'
+import { useInputFile } from '@/hooks/imputFile'
+import { useToast } from 'vue-toastification'
 
 export function useArticleAdd () {
+  const $toast = useToast()
   const articleId = ref(null)
   const tagOptionsRef = ref([{ id: 0, name: '' }])
   const formRef = reactive({
@@ -11,7 +14,6 @@ export function useArticleAdd () {
     cover: '',
     article: ''
   })
-  const uploadFileInput = ref<HTMLElement>()
   const getTagList = async () => {
     const tagData = await Api.tag.getTagList()
     const options = tagData.data.list.map(item => {
@@ -22,20 +24,13 @@ export function useArticleAdd () {
     })
     tagOptionsRef.value = options
   }
-  const uploadImage = () => {
-    if (uploadFileInput.value) {
-      (uploadFileInput.value as HTMLInputElement).value = ''
-      uploadFileInput.value.click()
-    }
-  }
-  const choiceFile = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    const formdata = new FormData()
-    formdata.append('file', file)
+
+  const postItem = async (formdata) => {
     const newImage = await Api.image.postImageItem(formdata)
     formRef.cover = newImage.data.url
   }
+
+  const inputFile = useInputFile(postItem)
 
   const handleUploadImage = async (event, insertImage, files) => {
     const formdata = new FormData()
@@ -52,10 +47,14 @@ export function useArticleAdd () {
       ...formRef
     })
     articleId.value = newArticle.data.id
+    $toast.success('保存成功')
   }
 
   const editArticle = async () => {
-    console.log('保存')
+    await Api.article.editArticleItem(articleId.value, {
+      ...formRef
+    })
+    $toast.success('修改成功')
   }
 
   onMounted(() => {
@@ -65,13 +64,11 @@ export function useArticleAdd () {
   return {
     tagOptionsRef,
     formRef,
-    uploadFileInput,
     articleId,
     getTagList,
-    uploadImage,
-    choiceFile,
     handleUploadImage,
     saveArticle,
-    editArticle
+    editArticle,
+    ...inputFile
   }
 }
