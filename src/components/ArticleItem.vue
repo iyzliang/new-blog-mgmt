@@ -25,6 +25,13 @@
           <div class="article-content">
             <h2 class="article-title">{{ articleData.title }}</h2>
             <p class="article-description">{{ articleData.description }}</p>
+            <div class="article-time">
+              <p class="time">
+                <i class="el-icon-time"></i>
+                {{ articleData.updateTime }}
+              </p>
+              <div class="article-tag" v-for="item in articleData.tags" :key="item.id">{{ item.name }}</div>
+            </div>
           </div>
         </div>
       </template>
@@ -83,6 +90,8 @@ export default defineComponent({
     background-color: #FFF;
     border-radius: 10px;
     padding: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
     .article-cover {
       width: 200px;
       height: auto;
@@ -91,18 +100,56 @@ export default defineComponent({
       margin-left: 30px;
     }
     .article-content {
-      flex: auto;
+      width: calc(100% - 230px);
       .article-title {
+        color: #333;
+        width: 100%;
         height: 30px;
         line-height: 30px;
         font-size: 20px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
       }
-      .article-content-des {
-        padding: 30px 0;
+      .article-description {
+        width: 100%;
+        color: #999;
+        min-height: 48px;
+        margin-top: 10px;
+        overflow : hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
       }
-      .article-content-time {
-        margin-top: 40px;
+      .article-time {
+        color: #333;
+        width: 100%;
+        margin-top: 20px;
         text-align: right;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        .tiem {
+          height: 26px;
+          padding-left: 30px;
+          color: #99a9bf;
+          > i {
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+        .article-tag {
+          margin-left: 20px;
+          height: 26px;
+          line-height: 26px;
+          padding: 0 10px;
+          border-radius: 4px;
+          border: 1px solid #cccccc;
+        }
       }
     }
   }

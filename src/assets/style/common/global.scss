@@ -59,6 +59,7 @@
   .container-tabel {
     height: var(--table-height);
     width: 100%;
+    overflow-x: hidden;
     overflow-y: scroll;
   }
   .container-pagination {

@@ -82,7 +82,6 @@ export function useArticleHome () {
 
   const infiniteScrollFn = () => {
     const curCount = pageData.page * pageData.size
-    console.log(curCount)
     if (totalRef.value > curCount) {
       pageData.page = pageData.page + 1
       getArticleData()

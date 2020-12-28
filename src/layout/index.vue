@@ -41,6 +41,7 @@ export default defineComponent({
 .container-bg {
   width: 100%;
   height: 100vh;
+  min-height: 1000px;
   background-image: url('../assets/images/bg.webp');
   background-size: cover;
   background-repeat: no-repeat;
@@ -48,7 +49,7 @@ export default defineComponent({
 }
 .layout-wrapper {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   backdrop-filter: blur(20px);
   display: flex;
   justify-content: center;
