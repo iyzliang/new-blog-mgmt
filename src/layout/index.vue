@@ -29,7 +29,7 @@ export default defineComponent({
   },
 
   setup () {
-    const keepAlive = ref<string[]>(['article-home', 'image-home', 'tag-list'])
+    const keepAlive = ref<string[]>(['image-home'])
     return {
       keepAlive
     }

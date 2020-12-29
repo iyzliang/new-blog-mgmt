@@ -3,7 +3,7 @@ import Api from '@/api'
 import { useInputFile } from '@/hooks/imputFile'
 import { useToast } from 'vue-toastification'
 
-export function useArticleAdd () {
+export function useArticleAdd (props) {
   const $toast = useToast()
   const articleId = ref(null)
   const tagOptionsRef = ref([{ id: 0, name: '' }])
@@ -14,6 +14,18 @@ export function useArticleAdd () {
     cover: '',
     article: ''
   })
+  if (props.id) {
+    articleId.value = props.id
+    onMounted(async () => {
+      const articleItem = await Api.article.detailArticleItem(articleId.value)
+      const { title, description, tags, cover, article } = articleItem.data
+      formRef.title = title
+      formRef.description = description
+      formRef.tags = tags.map(item => item.id)
+      formRef.cover = cover
+      formRef.article = article
+    })
+  }
   const getTagList = async () => {
     const tagData = await Api.tag.getTagList()
     const options = tagData.data.list.map(item => {

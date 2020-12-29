@@ -33,6 +33,10 @@
               <div class="article-tag" v-for="item in articleData.tags" :key="item.id">{{ item.name }}</div>
             </div>
           </div>
+          <div class="handle-right">
+            <i class="el-icon-edit-outline handle-btn" @click="editArticle"></i>
+            <i class="el-icon-delete handle-btn" @click="deleteArticle"></i>
+          </div>
         </div>
       </template>
     </el-skeleton>
@@ -47,6 +51,21 @@ export default defineComponent({
     articleData: {
       type: Array,
       default: () => []
+    }
+  },
+
+  emits: ['edit-article', 'delete-article'],
+
+  setup (props, ctx) {
+    const editArticle = () => {
+      ctx.emit('edit-article', props.articleData.id)
+    }
+    const deleteArticle = () => {
+      ctx.emit('delete-article', props.articleData.id)
+    }
+    return {
+      editArticle,
+      deleteArticle
     }
   }
 })
@@ -92,6 +111,7 @@ export default defineComponent({
     padding: 10px;
     overflow: hidden;
     box-sizing: border-box;
+    position: relative;
     .article-cover {
       width: 200px;
       height: auto;
@@ -150,6 +170,36 @@ export default defineComponent({
           border-radius: 4px;
           border: 1px solid #cccccc;
         }
+      }
+    }
+    .handle-right {
+      width: 150px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba($color: #000000, $alpha: 0.5);
+      padding: 0 60px;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: space-around;
+      transform: translateX(150px);
+      opacity: 0;
+      transition: all 0.5s;
+      .handle-btn {
+        font-size: 30px;
+        color: #FFF;
+        display: block;
+        cursor: pointer;
+        &:hover {
+          color: #409eff;
+        }
+      }
+    }
+    &:hover {
+      .handle-right {
+        transform: translateX(0);
+        opacity: 1;
       }
     }
   }

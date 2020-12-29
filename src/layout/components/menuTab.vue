@@ -22,12 +22,6 @@ export interface MenuItem {
 const useCreateMenu = () => {
   const menuListRef = ref<Array<MenuItem>>([
     {
-      menuId: 0,
-      menuName: '数据统计',
-      menuIcon: 'yzliang-tongjishangwu',
-      menuRoute: 'analytic-home'
-    },
-    {
       menuId: 1,
       menuName: '标签管理',
       menuIcon: 'yzliang-biaoqian',
@@ -44,13 +38,19 @@ const useCreateMenu = () => {
       menuName: '文章管理',
       menuIcon: 'yzliang-wenzhang',
       menuRoute: 'article-home'
+    },
+    {
+      menuId: 4,
+      menuName: '文章新增',
+      menuIcon: 'yzliang-xinzeng',
+      menuRoute: 'article-add'
     }
   ])
   const activeMenuId = computed(() => store.state.defaultMenuId)
   onMounted(() => {
     nextTick(() => {
       console.log(activeMenuId.value)
-      ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${activeMenuId.value}`)
+      ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${activeMenuId.value - 1}`)
     })
   })
   const changeMenuItem = (item: MenuItem) => {
@@ -58,7 +58,7 @@ const useCreateMenu = () => {
     if (item.menuRoute) {
       router.push({ name: item.menuRoute })
     }
-    ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${item.menuId}`)
+    ;((document.querySelector('.menu-tab')) as HTMLElement).style.setProperty('--active-index', `${item.menuId - 1}`)
   }
   return {
     menuListRef,

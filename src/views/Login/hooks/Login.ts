@@ -31,7 +31,7 @@ export function useLogin () {
         localStorage.setItem(globalConfig.refreshKey, accessData.data.refreshToken)
         localStorage.setItem(globalConfig.expiresKey, accessData.data.expiresIn)
         loadingInstance.close()
-        router.push('/')
+        router.push({ name: 'tag-list' })
       }
     } finally {
       loadingInstance && loadingInstance.close()

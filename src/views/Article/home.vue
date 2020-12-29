@@ -13,12 +13,9 @@
           </el-option>
         </el-select>
       </div>
-      <div class="handle-button">
-        <el-button type="success" round @click="addArticle">写文章</el-button>
-      </div>
     </div>
     <div class="container-tabel" v-infinite-scroll="infiniteScrollFn">
-      <article-item v-for="item in articleRef" :key="item.id" :articleLoading="loadingRef" :articleData="item"></article-item>
+      <article-item v-for="item in articleRef" :key="item.id" :articleLoading="loadingRef" :articleData="item" @edit-article="editArticle" @delete-article="deleteArticle"></article-item>
       <p v-if="!isMoreData" class="no-more">没有更多了</p>
     </div>
   </div>

@@ -37,23 +37,28 @@
         </div>
       </div>
     </div>
-    <v-md-editor v-model="formRef.article" class="article-md" :disabled-menus="[]" @upload-image="handleUploadImage" @save="saveMd"></v-md-editor>
+    <v-md-editor v-model="formRef.article" class="article-md" :disabled-menus="[]" @upload-image="handleUploadImage" @save="articleId ? editArticle() : saveArticle()"></v-md-editor>
     <div class="handle-button">
-      <el-button v-if="articleId" type="primary" @click="editArticle">修 改</el-button>
-      <el-button v-else type="primary" @click="saveArticle">保 存</el-button>
+      <el-button type="primary" @click="articleId ? editArticle() : saveArticle()">{{ articleId ? '修 改' : '新 增' }}</el-button>
       <el-button @click="router.back(-1)">返 回</el-button>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useArticleAdd } from './hooks/add'
+import { useArticleAdd } from './hooks/redact'
 import router from '@/router'
 export default defineComponent({
   name: 'article-add',
 
-  setup () {
-    const rticleAdd = useArticleAdd()
+  props: {
+    id: {
+      type: Number
+    }
+  },
+
+  setup (props) {
+    const rticleAdd = useArticleAdd(props)
 
     return {
       ...rticleAdd,

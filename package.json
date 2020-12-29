@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode localhost",
     "build": "vue-cli-service build --mode dev",
-    "build: prod": "vue-cli-service build --mode prod",
+    "build:prod": "vue-cli-service build --mode prod",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

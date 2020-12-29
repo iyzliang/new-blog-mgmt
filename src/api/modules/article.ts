@@ -12,8 +12,18 @@ const editArticleItem = (id, data) => {
   return handleRequest(`/api/blog/v1/article/${id}`, data)({ method: 'PUT' })
 }
 
+const detailArticleItem = id => {
+  return handleRequest(`/api/blog/v1/article/${id}`)()
+}
+
+const deleteArticleItem = id => {
+  return handleRequest(`/api/blog/v1/article/${id}`)({ method: 'DELETE' })
+}
+
 export default {
   getArticleList,
   postArticleItem,
-  editArticleItem
+  editArticleItem,
+  detailArticleItem,
+  deleteArticleItem
 }

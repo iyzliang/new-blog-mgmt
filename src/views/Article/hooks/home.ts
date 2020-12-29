@@ -93,10 +93,14 @@ export function useArticleHome () {
     }
   }
 
-  const addArticle = () => {
-    router.push({ name: 'article-add' })
+  const editArticle = id => {
+    router.push({ name: 'article-edit', params: { id } })
   }
 
+  const deleteArticle = async id => {
+    await Api.article.deleteArticleItem(id)
+    articleRef.value = articleRef.value.filter(item => item.id !== id)
+  }
   onMounted(() => {
     getTagList()
     getArticleData()
@@ -110,6 +114,7 @@ export function useArticleHome () {
     getArticleData,
     searchArticle,
     infiniteScrollFn,
-    addArticle
+    editArticle,
+    deleteArticle
   }
 }
