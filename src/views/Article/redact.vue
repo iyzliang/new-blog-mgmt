@@ -32,7 +32,11 @@
         <div class="article-cover">
           <span>封面：</span>
           <el-button type="primary" v-if="!formRef.cover" @click="uploadImage">上传<i class="el-icon-upload el-icon--right"></i></el-button>
-          <img v-else :src="formRef.cover" class="cover-img">
+          <choice-image v-if="!formRef.cover" style="marginLeft: 30px" @choice-image="choiceImageFn"/>
+          <div v-else class="cover-img-container">
+            <img :src="formRef.cover" class="cover-img">
+            <i class="el-icon-delete" @click="formRef.cover = ''"></i>
+          </div>
           <input type="file" v-show="false" ref="uploadFileInput" accept="image/*" @change="choiceFile">
         </div>
       </div>
@@ -47,9 +51,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useArticleAdd } from './hooks/redact'
+import choiceImage from '@/components/ChoiceImage.vue'
 import router from '@/router'
 export default defineComponent({
   name: 'article-add',
+
+  components: {
+    choiceImage
+  },
 
   props: {
     id: {
@@ -89,9 +98,30 @@ export default defineComponent({
         flex: 1;
         display: flex;
         align-items: flex-start;
-        .cover-img {
+        .cover-img-container {
           height: 100px;
+          position: relative;
           width: auto;
+          .cover-img {
+            height: 100px;
+            width: auto;
+          }
+          .el-icon-delete {
+            display: none;
+            font-size: 20px;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            cursor: pointer;
+            &:hover {
+              color: #409eff;
+            }
+          }
+          &:hover {
+            .el-icon-delete {
+              display: block;
+            }
+          }
         }
         > span {
           margin-top: 15px;

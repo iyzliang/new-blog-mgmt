@@ -69,6 +69,10 @@ export function useArticleAdd (props) {
     $toast.success('修改成功')
   }
 
+  const choiceImageFn = (url) => {
+    formRef.cover = url
+  }
+
   onMounted(() => {
     getTagList()
   })
@@ -81,6 +85,7 @@ export function useArticleAdd (props) {
     handleUploadImage,
     saveArticle,
     editArticle,
+    choiceImageFn,
     ...inputFile
   }
 }

@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="container-tabel">
-      <div class="img-space" wrap alignment="flex-end">
+      <div class="img-space">
         <div class="img-block" v-for="item in imageListRef" :key="item.name">
           <el-image style="width: 100%;height: 200px;display: block;" :src="item.url" fit="contain" lazy :preview-src-list="[item.url]"></el-image>
           <p class="img-name copy-dom" @click="copyUrl(item.url)">{{ item.name }}</p>
@@ -55,6 +55,7 @@ export default defineComponent({
         overflow: hidden;
         border-radius: 10px;
         position: relative;
+        background-color: #F5F7FA;
         .img-name {
           width: 100%;
           height: 30px;
